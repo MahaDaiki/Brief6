@@ -92,3 +92,19 @@ nav{
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+.background {
+  position: relative;
+}
+
+.background img {
+  width: 100%;
+  height: auto; 
+}
+
+.title {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  color: #d8dcff;
+  font-size: 6rem; 
+}
