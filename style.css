@@ -13,13 +13,16 @@
   overflow: hidden;
   transition: max-height 0.5s;
  }
- .menuwrp.menuwrpopen{
+
+.menuwrpopen{
   max-height: 400px;
+
  }
+
  .submenu{
   background: #fff;
   padding: 20px;
-  margin: 10px;
+ 
  }
  .submenu hr{
   border: 0;
