@@ -4,6 +4,64 @@
     width: 100%;
 
 }
+ .menuwrp{
+  position:absolute;
+  top: 100%;
+  right:10%;
+  width:320px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+ }
+ .menuwrp.menuwrpopen{
+  max-height: 400px;
+ }
+ .submenu{
+  background: #fff;
+  padding: 20px;
+  margin: 10px;
+ }
+ .submenu hr{
+  border: 0;
+  height: 1px;
+  width: 100%;
+  background: #ccc;
+  margin: 15px 0 10px;
+ }
+ .userinfo{
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+
+ }
+ .userinfo img{
+  width: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
+ }
+nav{
+    background-color: #505FE9;
+}
+.lo{
+    background-color: #7682EE;
+    border-radius: 35px;
+    margin-left: 4rem;
+    padding: 0 15px;
+}
+  .navbar-brand {
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .navbar-nav {
+    margin-left: auto;
+  }
+
+  .nav-link {
+    color: #fff;
+  }
+
+  
 .login{
     display: flex;
     align-items: center;
