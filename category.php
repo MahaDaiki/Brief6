@@ -78,7 +78,6 @@ if ($stockFilter) {
 <div class="container mt-4">
     <form action="" method="get" class="row mt-4 justify-content-center">
         <?php
-        // Display checkboxes for each category
         foreach ($categories as $category) {
             ?>
             <div class="form-check form-check-inline">
@@ -96,30 +95,36 @@ if ($stockFilter) {
             <label class="form-check-label">Low Stock</label>
         </div>
         <button type="submit" class="btn btn-primary">Filter</button>
+        <a class="btn btn-primary" href=add.php>ADD</a> 
     </form>
 
     <div class="row">
         <?php
         // Display products based on the filter
         while ($item = $result->fetch_assoc()) {
-            ?>
+            if ($item['bl']) {
+                ?>
             <div class="col-md-3 mb-4">
                 <div class="card">
                     <img src="<?php echo $item['imgs']; ?>" class="card-img-top" alt="<?php echo $item['productname']; ?>">
                     <div class="card-body">
                         <h5 class="card-title"><?php echo $item['productname']; ?></h5>
+                        <h6><?php echo $item['descrip']; ?></h6>
                         <p class="card-text">
-                            Purchase Price: <?php echo $item['purchase_price']; ?><br>
                             Final Price: <?php echo $item['final_price']; ?><br>
+                            offer Price: <?php echo $item['price_offer']; ?><br>
                             Stock Quantity: <?php echo $item['stock_quantity']; ?><br>
                             Category: <?php echo $item['category_name']; ?>
                         </p>
+                        <a href="edit.php?product_id=<?php echo $item['reference']; ?>" class="btn btn-primary">Edit</a>
                     </div>
                 </div>
             </div>
             <?php
         }
+    }
         ?>
+        
     </div>
 
     <script src="index.js"></script>

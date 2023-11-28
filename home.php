@@ -115,88 +115,102 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
-<?php
  
-function get_items($page, $itemsPerPage) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "maha123";
-    $dbname = "electronacerdb2";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Calculate offset based on page number
-    $offset = ($page - 1) * $itemsPerPage;
-
-    $sql = "SELECT * FROM Products LIMIT $offset, $itemsPerPage";
-    $result = $conn->query($sql);
-
-    $items = array();
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $items[] = $row;
-        }
-    }
-
-    $conn->close();
-
-    return $items;
-}
-
-// Set the number of items per page
-$itemsPerPage = 20 ;
-
-// Get the current page number (default to 1 if not set)
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-
-// Get items for the current page
-$items = get_items($page, $itemsPerPage);
-?>
-
-<!-- Display items -->
-<div class="container mt-4">
-    <div class="row">
-        <?php foreach ($items as $item) : ?>
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="<?php echo $item['imgs']; ?>" class="card-img-top" alt="<?php echo $item['productname']; ?>">
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $item['productname']; ?></h5>
-                        <p class="card-text">
-                            Reference: <?php echo $item['reference']; ?><br>
-                            Barcode: <?php echo $item['barcode']; ?><br>
-                            Purchase Price: <?php echo $item['purchase_price']; ?><br>
-                            Final Price: <?php echo $item['final_price']; ?><br>
-                            Price Offer: <?php echo $item['price_offer']; ?><br>
-                            Description: <?php echo $item['descrip']; ?><br>
-                            Min Quantity: <?php echo $item['min_quantity']; ?><br>
-                            Stock Quantity: <?php echo $item['stock_quantity']; ?><br>
-                            Category: <?php echo $item['category_name']; ?>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-
+ <?php
+ function get_items($page, $itemsPerPage) {
+     $servername = "localhost";
+     $username = "root";
+     $password = "maha123";
+     $dbname = "electronacerdb2";
+ 
+     $conn = new mysqli($servername, $username, $password, $dbname);
+ 
+     if ($conn->connect_error) {
+         die("Connection failed: " . $conn->connect_error);
+     }
+ 
+     // Calculate offset based on page number
+     $offset = ($page - 1) * $itemsPerPage;
+ 
+     $sql = "SELECT * FROM Products LIMIT $offset, $itemsPerPage";
+     $result = $conn->query($sql);
+ 
+     $items = array();
+ 
+     if ($result->num_rows > 0) {
+         while ($row = $result->fetch_assoc()) {
+             $items[] = $row;
+         }
+     }
+ 
+     $conn->close();
+ 
+     return $items;
+ }
+ 
+ // Set the number of items per page
+ $itemsPerPage = 10;
+ 
+ // Get the current page number (default to 1 if not set)
+ $page = isset($_GET['page']) ? $_GET['page'] : 1;
+ 
+ // Get items for the current page
+ $items = get_items($page, $itemsPerPage);
+ ?>
+ 
+ <!-- Display items -->
+ <div class="container mt-4">
+     <div class="row">
+         <?php foreach ($items as $item) : ?>
+             <div class="col-md-3 mb-4">
+                 <div class="card">
+                     <img src="<?php echo $item['imgs']; ?>" class="card-img-top" alt="<?php echo $item['productname']; ?>">
+                     <div class="card-body">
+                         <h5 class="card-title"><?php echo $item['productname']; ?></h5>
+                         <p class="card-text">
+                             Reference: <?php echo $item['reference']; ?><br>
+                             Barcode: <?php echo $item['barcode']; ?><br>
+                             Purchase Price: <?php echo $item['purchase_price']; ?><br>
+                             Final Price: <?php echo $item['final_price']; ?><br>
+                             Price Offer: <?php echo $item['price_offer']; ?><br>
+                             Description: <?php echo $item['descrip']; ?><br>
+                             Min Quantity: <?php echo $item['min_quantity']; ?><br>
+                             Stock Quantity: <?php echo $item['stock_quantity']; ?><br>
+                             Category: <?php echo $item['category_name']; ?>
+                         </p>
+                     </div>
+                 </div>
+             </div>
+         <?php endforeach; ?>
+     </div>
+ </div>
+ 
 <!-- Display pagination links -->
 <div class="pagination">
     <?php
-    // Determine the total number of pages
-    $totalPages = ceil(count(get_items(1, $itemsPerPage)) / $itemsPerPage);
+    // Get total number of items for the current page
+    $totalItems = count(get_items($page, $itemsPerPage));
 
-    // Display pagination links
+    // Calculate total number of pages
+    $totalPages = ceil($totalItems / $itemsPerPage);
+
+    // Display previous page link if applicable
+    if ($page > 1) {
+        echo "<a href='?page=" . ($page - 1) . "' class='page-link'>Previous</a> ";
+    }
+
+    // Display numbered pagination links
     for ($i = 1; $i <= $totalPages; $i++) {
-        echo "<a href='?page=$i'>$i</a> ";
+        echo "<a href='?page=$i' class='page-link'>$i</a> ";
+    }
+
+    // Display next page link if applicable
+    if ($page < $totalPages) {
+        echo "<a href='?page=" . ($page + 1) . "' class='page-link'>Next</a> ";
     }
     ?>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
