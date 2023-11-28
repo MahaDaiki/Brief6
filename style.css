@@ -119,6 +119,9 @@ nav{
 }
 .pagination {
   margin-top: 20px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .pagination a {

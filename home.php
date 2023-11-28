@@ -117,6 +117,46 @@
 </div>
  
  <?php
+
+
+
+function get_AllItems() {
+    $servername = "localhost";
+    $username = "root";
+    $password = "maha123";
+    $dbname = "electronacerdb2";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+
+    
+// fetch all items
+$sql = "SELECT * FROM Products";
+$result = $conn->query($sql);
+$allItems = array();
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $allItems[] = $row;
+    }
+    
+    // Display the length of items
+    
+} else {
+    echo "No items found.";
+}
+
+   
+     return $allItems;
+
+}
+
+
+
  function get_items($page, $itemsPerPage) {
      $servername = "localhost";
      $username = "root";
@@ -134,17 +174,17 @@
  
      $sql = "SELECT * FROM Products LIMIT $offset, $itemsPerPage";
      $result = $conn->query($sql);
- 
+
      $items = array();
  
+    
      if ($result->num_rows > 0) {
-         while ($row = $result->fetch_assoc()) {
-             $items[] = $row;
-         }
-     }
- 
-     $conn->close();
- 
+       while ($row = $result->fetch_assoc()) {
+         $items[] = $row;
+        }
+      }
+
+      $conn->close();
      return $items;
  }
  
@@ -156,6 +196,7 @@
  
  // Get items for the current page
  $items = get_items($page, $itemsPerPage);
+
  ?>
  
  <!-- Display items -->
@@ -192,10 +233,11 @@
     $totalItems = count(get_items($page, $itemsPerPage));
 
     // Calculate total number of pages
-    $totalPages = ceil($totalItems / $itemsPerPage);
+    $totalPages = ceil(count(get_AllItems()) / $itemsPerPage);
 
     // Display previous page link if applicable
     if ($page > 1) {
+     
         echo "<a href='?page=" . ($page - 1) . "' class='page-link'>Previous</a> ";
     }
 
@@ -204,8 +246,10 @@
         echo "<a href='?page=$i' class='page-link'>$i</a> ";
     }
 
+
     // Display next page link if applicable
     if ($page < $totalPages) {
+   
         echo "<a href='?page=" . ($page + 1) . "' class='page-link'>Next</a> ";
     }
     ?>
