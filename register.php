@@ -17,7 +17,7 @@
             <input class="inp" type="password" id="password" name="password" placeholder="Password" required>
             <input class="inp" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
             <button class="bttn btn btn-primary" type="submit">Sign Up</button>
-            <a href="index.html">Log In</a>
+            <a href="index.php">Log In</a>
         </form>
 
         <?php
@@ -53,10 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
     // Insert user data into the users table
-    $sql = "INSERT INTO users (username, email, passw, valide) VALUES ('$username', '$email', '$hashed_password', 1)";
+    $sql = "INSERT INTO users (username, email, passw, valide) VALUES ('$username', '$email', '$hashed_password', 0)";
 
     if ($conn->query($sql) === true) {
-        header("Location: index.php");
+
+        echo '<div style="color: red; font-weight: bold; text-align: center;">"User registered successfully. Waiting for verification."</div>';
         exit();
     } else {
         echo "Error: " . $conn->error;

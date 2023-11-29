@@ -5,7 +5,7 @@ CREATE TABLE users (
     username VARCHAR(30) NOT NULL,
     email VARCHAR(250) NOT NULL,
     passw VARCHAR(220) NOT NULL,
-    valide BOOLEAN NOT NULL,
+    valide BOOLEAN DEFAULT false,
     PRIMARY KEY (id)
 ) 
 --@block

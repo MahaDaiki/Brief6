@@ -9,10 +9,12 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+session_start();
 
+
+$isAdmin = isset($_SESSION['is_admin']);
 $categoriesResult = $conn->query("SELECT * FROM categories");
 
-// Fetch categories and store them in an array
 $categories = [];
 while ($row = $categoriesResult->fetch_assoc()) {
     $categories[] = $row;
@@ -23,9 +25,9 @@ $categoryFilter = isset($_GET['category']) ? $_GET['category'] : null;
 $stockFilter = isset($_GET['stock']) && $_GET['stock'] == 'low';
 
 if ($stockFilter) {
-    $lowStockThreshold = 10; // Set your desired threshold
-    $sql = "SELECT * FROM products WHERE stock_quantity < $lowStockThreshold";
+    $sql = "SELECT * FROM products WHERE stock_quantity <= min_quantity";
     $result = $conn->query($sql);
+
 } else {
     // If the button is not pressed, show products based on the selected category filter or all products
     if ($categoryFilter) {
@@ -38,6 +40,7 @@ if ($stockFilter) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,13 +65,30 @@ if ($stockFilter) {
             </li>
         </ul>
         <img width="48" src="img/user-286-128.png" alt="profile" class="user-pic">
-        <div class="menuwrp" id="subMenu">
+        <div class="menuwrp" id="subMenu" style="z-index: 99 ;">
             <div class="submenu">
                 <div class="userinfo">
-                    <img src="img/user-286-128.png" alt="user">
-                    <h2> username</h2>
-                    <hr>
-                    <a href="index.php">Log Out</a>
+                    <?php
+            
+            // Check if an admin is logged in
+            if (isset($_SESSION["admin_username"])) {
+              $displayName = $_SESSION["admin_username"];
+            } elseif (isset($_SESSION["username"])) {
+              $displayName = $_SESSION["username"];
+            } else {
+              // Redirect to the login page if neither admin nor user is logged in
+              header("Location: login.php");
+              exit();
+            }
+            ?>
+            <div class="userinfo">
+              <img src="img/user-286-128.png" alt="user">
+              <h2>
+                <?php echo $displayName; ?>
+              </h2>
+              <hr>
+              <a href="logout.php">Log Out</a>
+            
                 </div>
             </div>
         </div>
@@ -76,12 +96,13 @@ if ($stockFilter) {
 </nav>
 
 <div class="container mt-4">
-    <form action="" method="get" class="row mt-4 justify-content-center">
+    <form action="" method="get" class=" mt-4 justify-content-center">
         <?php
         foreach ($categories as $category) {
             ?>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="category[]" value="<?php echo $category['catname']; ?>" <?php if (is_array($categoryFilter) && in_array($category['catname'], $categoryFilter)) echo 'checked'; ?>>
+                <input class="form-check-input" type="checkbox" name="category[]" value="<?php echo $category['catname']; ?>" 
+                <?php if (is_array($categoryFilter) && in_array($category['catname'], $categoryFilter)) echo 'checked'; ?>>
                 <label class="form-check-label">
                     <img src="<?php echo $category['imgs']; ?>" alt="<?php echo $category['catname']; ?>" width="50" height="50"><br>
                     <?php echo $category['catname']; ?>
@@ -95,7 +116,12 @@ if ($stockFilter) {
             <label class="form-check-label">Low Stock</label>
         </div>
         <button type="submit" class="btn btn-primary">Filter</button>
-        <a class="btn btn-primary" href=add.php>ADD</a> 
+        <?php
+                    if ($isAdmin) {
+                        echo '<a class="btn btn-primary ml3" href=add.php>ADD</a>';
+    }
+    ?>
+
     </form>
 
     <div class="row">
@@ -116,13 +142,18 @@ if ($stockFilter) {
                             Stock Quantity: <?php echo $item['stock_quantity']; ?><br>
                             Category: <?php echo $item['category_name']; ?>
                         </p>
-                        <a href="edit.php?product_id=<?php echo $item['reference']; ?>" class="btn btn-primary">Edit</a>
+                        <?php
+                    if ($isAdmin) {
+                        echo '<a href="edit.php?product_id=' . $item['reference'] . '" class="btn btn-primary">Edit</a>';
+                    }
+                    ?>
                     </div>
                 </div>
             </div>
             <?php
         }
     }
+
         ?>
         
     </div>

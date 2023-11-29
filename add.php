@@ -25,21 +25,27 @@
             <div class="submenu">
                 <div class="userinfo">
                 <?php
-        session_start(); // Start the session
+            session_start(); // Start the session
+            
+            // Check if an admin is logged in
+            if (isset($_SESSION["admin_username"])) {
+              $displayName = $_SESSION["admin_username"];
+            } elseif (isset($_SESSION["username"])) {
+              $displayName = $_SESSION["username"];
+            } else {
+              header("Location: index.php");
+              exit();
+            }
+            ?>
+            <div class="userinfo">
+              <img src="img/user-286-128.png" alt="user">
+              <h2>
+                <?php echo $displayName; ?>
+              </h2>
+              <hr>
+              <a href="logout.php">Log Out</a>
+              <
 
-        if (isset($_SESSION["username"])) {
-            $username = $_SESSION["username"];
-        } else {
-            // Redirect to the login page if the user is not logged in
-            header("Location: login.php");
-            exit();
-        }
-        ?>
-        <div class="userinfo">
-            <img src="img/user-286-128.png" alt="user">
-            <h2><?php echo $username; ?></h2>
-            <hr>
-            <a href="logout.php">Log Out</a>
                 </div>
             </div>
         </div>
