@@ -23,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($adminResult->num_rows > 0) {
         $adminRow = $adminResult->fetch_assoc();
-        $adminPlainPassword = $adminRow["passw"];
-
+        $adminStoredHash = $adminRow["passw"];
+    
         // Verify the admin password
-        if ($password == $adminPlainPassword) {
+        if (password_verify($password, $adminStoredHash)) {
             $_SESSION["admin_username"] = $username;
             $_SESSION["is_admin"] = true;
-
+    
             header("Location: home.php");
             exit();
         } else {

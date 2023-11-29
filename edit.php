@@ -43,6 +43,11 @@
                 <?php echo $displayName; ?>
               </h2>
               <hr>
+              <?php
+                    if ($isAdmin) {
+                        echo '<a href="adminpan.php">Admin Panel</a>';
+                    }
+                    ?>
               <a href="logout.php">Log Out</a>
                 </div>
             </div>
@@ -152,7 +157,7 @@ if (isset($_GET['product_id'])) {
     if ($productDetails) {
 ?>
 <div class="container">
-<form method="post" action="" class="bg-light p-4 rounded formedit">
+<form method="post" action="" class="bg-light p-4 rounded formedit my-5">
     <h2 class="mb-4 text-center">Edit Product</h2>
 
     <div class="mb-3">
@@ -208,14 +213,7 @@ if (isset($_GET['product_id'])) {
     } else {
         echo "Product not found!";
     }
-} else {
-    // If no product ID is provided, display a list of products with edit links
-    $products = fetchProducts();
-    
-    foreach ($products as $product) {
-        echo "Product Name: {$product['productname']} - <a href='edit_product.php?product_id={$product['reference']}'>Edit</a><br>";
-    }
-}
+} 
 ?>
 <?php
 // Check if the form is submitted

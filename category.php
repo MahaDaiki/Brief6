@@ -47,7 +47,7 @@ if ($stockFilter) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Category</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
@@ -87,6 +87,12 @@ if ($stockFilter) {
                 <?php echo $displayName; ?>
               </h2>
               <hr>
+              <?php
+                    if ($isAdmin) {
+                        echo '<a href="adminpan.php">Admin Panel</a>';
+                    }
+                    ?>
+                    <div>
               <a href="logout.php">Log Out</a>
             
                 </div>
@@ -99,6 +105,7 @@ if ($stockFilter) {
     <form action="" method="get" class=" mt-4 justify-content-center">
         <?php
         foreach ($categories as $category) {
+            if ($category['bl'] == 1) {
             ?>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" name="category[]" value="<?php echo $category['catname']; ?>" 
@@ -110,6 +117,7 @@ if ($stockFilter) {
             </div>
             <?php
         }
+    }
         ?>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="checkbox" name="stock" value="low" <?php if ($stockFilter) echo 'checked'; ?>>
@@ -118,7 +126,8 @@ if ($stockFilter) {
         <button type="submit" class="btn btn-primary">Filter</button>
         <?php
                     if ($isAdmin) {
-                        echo '<a class="btn btn-primary ml3" href=add.php>ADD</a>';
+                        echo '<a class="btn btn-primary" href=add.php>ADD</a>';
+                        echo '<a class="btn btn-primary ml-1" href=managecat.php>Manage</a>';
     }
     ?>
 

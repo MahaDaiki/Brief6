@@ -11,9 +11,9 @@ CREATE TABLE users (
 --@block
 CREATE TABLE admins(
     id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
-    username VARCHAR(30) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    passw VARCHAR(20) NOT NULL
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(250) NOT NULL,
+    passw VARCHAR(250) NOT NULL
     
 );
 --@block

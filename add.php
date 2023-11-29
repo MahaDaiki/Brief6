@@ -43,8 +43,13 @@
                 <?php echo $displayName; ?>
               </h2>
               <hr>
+              <?php
+                    if ($isAdmin) {
+                        echo '<a href="adminpan.php">Admin Panel</a>';
+                    }
+                    ?>
               <a href="logout.php">Log Out</a>
-              <
+              
 
                 </div>
             </div>
@@ -106,7 +111,7 @@ $conn->close();
 
 <div class="container formedit">
     <h2 class="text-center mb-4">Add Item</h2>
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" action="" enctype="multipart/form-data" class="my-5">
         <div class="form-group">
             <label for="imgs">Image Upload:</label>
             <input type="file" class="form-control-file" name="imgs">
