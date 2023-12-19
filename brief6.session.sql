@@ -1,7 +1,8 @@
 USE electronacerdb2;
+
 --@block
 CREATE TABLE users (
-    id INT NOT NULL,
+    id INT NOT NULL ,
     username VARCHAR(30) NOT NULL,
     email VARCHAR(250) NOT NULL,
     passw VARCHAR(220) NOT NULL,
@@ -10,7 +11,7 @@ CREATE TABLE users (
 ) 
 --@block
 CREATE TABLE admins(
-    id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+    id  INT PRIMARY KEY  ,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(250) NOT NULL,
     passw VARCHAR(250) NOT NULL
@@ -21,7 +22,7 @@ INSERT INTO admins ( username , email ,passw) VALUES
 ('admin1','admin1@email.com','admin1')
 --@block
 CREATE TABLE Products (
-    reference INT PRIMARY KEY,
+    reference AUTOINCREMENT PRIMARY KEY ,
     imgs VARCHAR(250),
     productname VARCHAR(255) NOT NULL,
     barcode VARCHAR(10) NOT NULL,
@@ -84,3 +85,5 @@ INSERT INTO Products ( imgs, productname, barcode, purchase_price, final_price, 
     ('img/c1.jpg','White headset',2638465489,800,1000,NULL,'Wireless headset RGB',2,1,'Headsets', true),
     ('img/c2.jpg','Black headset',2648465489,900,1200,NULL,'Wireless headset RGB',2,5,'Headsets', true)
 
+--  ALTER TABLE clients
+-- MODIFY COLUMN id INT AUTO_INCREMENT;

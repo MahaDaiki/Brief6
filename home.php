@@ -141,18 +141,8 @@
 
   function get_AllItems()
   {
-    $servername = "localhost";
-    $username = "root";
-    $password = "maha123";
-    $dbname = "electronacerdb2";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-
-
+   
+include 'config.php';
 
     // fetch all items
     $sql = "SELECT * FROM Products";
@@ -179,17 +169,7 @@
 
   function get_items($page, $itemsPerPage)
   {
-    $servername = "localhost";
-    $username = "root";
-    $password = "maha123";
-    $dbname = "electronacerdb2";
-
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-
+    include 'config.php';
     // Calculate offset based on page number
     $offset = ($page - 1) * $itemsPerPage;
 
@@ -258,28 +238,21 @@
     </div>
   </div>
 
-  <!-- Display pagination links -->
+  
   <div class="pagination">
     <?php
     // Get total number of items for the current page
     $totalItems = count(get_items($page, $itemsPerPage));
-
-    // Calculate total number of pages
     $totalPages = ceil(count(get_AllItems()) / $itemsPerPage);
 
-    // Display previous page link if applicable
     if ($page > 1) {
-
       echo "<a href='?page=" . ($page - 1) . "' class='page-link'>Previous</a> ";
     }
 
-    // Display numbered pagination links
     for ($i = 1; $i <= $totalPages; $i++) {
       echo "<a href='?page=$i' class='page-link'>$i</a> ";
     }
 
-
-    // Display next page link if applicable
     if ($page < $totalPages) {
 
       echo "<a href='?page=" . ($page + 1) . "' class='page-link'>Next</a> ";

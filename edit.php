@@ -57,19 +57,7 @@
 
 <?php
 // Establish your database connection
-$servername = "localhost";
-$username = "root";
-$password = "maha123";
-$dbname = "electronacerdb2";
-
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include("config.php");
 // Function to fetch all products
 function fetchProducts() {
     global $conn;
@@ -222,17 +210,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['delete'])) {
         $reference = $_POST['reference'];
 
-        // Connect to the database
-        $servername = "localhost";
-        $username = "root";
-        $password = "maha123";
-        $dbname = "electronacerdb2";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
+    require_once("config.php");
 
         // Update the 'bl' column to false (0)
         $sql = "UPDATE Products SET bl = 0 WHERE reference = $reference";

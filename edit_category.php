@@ -55,19 +55,7 @@
 </nav>
 
 <?php
-// Establish your database connection
-$servername = "localhost";
-$username = "root";
-$password = "maha123";
-$dbname = "electronacerdb2";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+include("config.php");
 // Function to display category details in a form
 function displayCategoryDetails($categoryName) {
     global $conn;
@@ -90,7 +78,7 @@ function updateCategory($categoryName, $description, $imagePath) {
     return $conn->query($sql);
 }
 
-// Check if a category name is provided
+
 if (isset($_GET['category_name'])) {
     $categoryName = $_GET['category_name'];
 
@@ -100,21 +88,23 @@ if (isset($_GET['category_name'])) {
 
         // Check if an image file is uploaded
         if ($_FILES['new_image']['error'] == 0) {
-            $imagePath = "uploads/" . $_FILES['new_image']['name'];
+            $imagePath = "img/";
+            $imageFileName = $_FILES['new_image']['name'];
+            $imageFilePath = $imagePath . $imageFileName;
 
-            // Move the uploaded file to the specified directory
-            move_uploaded_file($_FILES['new_image']['tmp_name'], $imagePath);
+            move_uploaded_file($_FILES['new_image']['tmp_name'], $imageFilePath);
         } else {
             $imagePath = "";
+            $imageFilePath = ""; // Set a default value for the case where no image is uploaded
         }
 
-        if (updateCategory($categoryName, $newDescription, $imagePath)) {
+        if (updateCategory($categoryName, $newDescription, $imageFilePath)) {
             echo "Category updated successfully!";
         } else {
             echo "Error updating category: " . $conn->error;
         }
     }
-
+}
     // Display category details in a form for editing
     $categoryDetails = displayCategoryDetails($categoryName);
     if ($categoryDetails) {
@@ -142,7 +132,7 @@ if (isset($_GET['category_name'])) {
     } else {
         echo "Category not found!";
     }
-}
+
 ?>
 
 <script src="index.js"></script>

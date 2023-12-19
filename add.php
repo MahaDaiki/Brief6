@@ -1,3 +1,42 @@
+<?php
+session_start(); // Start the session
+
+require_once("config.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addItem'])) {
+    $imgs = $_FILES['imgs'];
+    $productname = $_POST['productname'];
+    $barcode = $_POST['barcode'];
+    $purchase_price = $_POST['purchase_price'];
+    $final_price = $_POST['final_price'];
+    $price_offer = isset($_POST['price_offer']) ? $_POST['price_offer'] : null;
+    $descrip = $_POST['descrip'];
+    $min_quantity = $_POST['min_quantity'];
+    $stock_quantity = $_POST['stock_quantity'];
+    $category_name = $_POST['category_name'];
+
+    // Handle image upload
+    $imagePath = "img/";
+    $imageFileName = $imgs['name'];
+    $imageFilePath = $imagePath . $imageFileName;
+
+    move_uploaded_file($imgs['tmp_name'], $imageFilePath);
+
+    // Insert into the 'Products' table
+    $sql = "INSERT INTO Products (imgs, productname, barcode, purchase_price, final_price, price_offer, descrip, min_quantity, stock_quantity, category_name, bl) 
+            VALUES ('$imageFilePath', '$productname', '$barcode', '$purchase_price', '$final_price', '$price_offer', '$descrip', '$min_quantity', '$stock_quantity', '$category_name', 1)";
+
+    // Handle the foreign key constraint
+    try {
+        $conn->query($sql);
+        echo "New item added successfully";
+    } catch (mysqli_sql_exception $e) {
+        echo "Error: " . $sql . "<br>" . $e->getMessage();
+    }
+}
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,58 +95,7 @@
         </div>
     </div>
 </nav>
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "maha123";
-$dbname = "electronacerdb2";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['addCategory'])) {
-        // Add a new category
-        $catname = $_POST['catname'];
-        $descrip = $_POST['descrip'];
-        $imgs = $_POST['imgs'];
-
-        $sql = "INSERT INTO Categories (catname, descrip, imgs, bl) VALUES ('$catname', '$descrip', '$imgs', 1)";
-
-        if ($conn->query($sql) === TRUE) {
-            echo "New category added successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-    } elseif (isset($_POST['addItem'])) {
-        // Add a new item
-        $imgs = $_POST['imgs'];
-        $productname = $_POST['productname'];
-        $barcode = $_POST['barcode'];
-        $purchase_price = $_POST['purchase_price'];
-        $final_price = $_POST['final_price'];
-        $price_offer = isset($_POST['price_offer']) ? $_POST['price_offer'] : 'NULL';
-        $descrip = $_POST['descrip'];
-        $min_quantity = $_POST['min_quantity'];
-        $stock_quantity = $_POST['stock_quantity'];
-        $category_name = $_POST['category_name'];
-
-        $sql = "INSERT INTO Products (imgs, productname, barcode, purchase_price, final_price, price_offer, descrip, min_quantity, stock_quantity, category_name, bl) 
-                VALUES ('$imgs', '$productname', '$barcode', '$purchase_price', '$final_price', $price_offer, '$descrip', '$min_quantity', '$stock_quantity', '$category_name', 1)";
-
-        if ($conn->query($sql) === TRUE) {
-            echo "New item added successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-        }
-    }
-}
-
-$conn->close();
-?>
 
 <div class="container formedit">
     <h2 class="text-center mb-4">Add Item</h2>
@@ -149,36 +137,14 @@ $conn->close();
             <input type="number" class="form-control" name="stock_quantity" required>
         </div>
         <div class="form-group">
-            <label for="category_name">Category Name:</label>
-            <label for="category_name">Category Name:</label>
-            <select class="form-control" name="category_name" required>
-                <?php
-              
-                $servername = "localhost";
-                $username = "root";
-                $password = "maha123";
-                $dbname = "electronacerdb2";
-
-                $conn = new mysqli($servername, $username, $password, $dbname);
-
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $categoriesResult = $conn->query("SELECT catname FROM categories");
-
-                // Display each category as an option
-                while ($row = $categoriesResult->fetch_assoc()) {
-                    echo "<option value='{$row['catname']}'>{$row['catname']}</option>";
-                }
-
-                $conn->close();
-                ?>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary" name="addItem">Add Item</button>
-    </form>
+        <div class="form-group">
+    <label for="category_name">Category Name:</label>
+    <input type="text" class="form-control" name="category_name" required>
 </div>
+<button type="submit" class="btn btn-danger mt-5" name="addItem">Add Item</button>
+</form>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -7,18 +7,8 @@ if (!isset($_SESSION["admin_username"])) {
     exit();
 }
 
-// Establish your database connection
-$servername = "localhost";
-$username = "root";
-$password = "maha123";
-$dbname = "electronacerdb2";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include("config.php");
 
 // Function to fetch all categories
 function fetchCategories() {
@@ -77,23 +67,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
 
     // Check if an image file is uploaded
     if ($_FILES['new_image']['error'] == 0) {
-        $imagePath = "uploads/" . $_FILES['new_image']['name'];
+        $imagePath = "img/"; // Set the target directory
+        $imageFileName = $_FILES['new_image']['name'];
+        $imageFilePath = $imagePath . $imageFileName;
 
-        // Move the uploaded file to the specified directory
-        move_uploaded_file($_FILES['new_image']['tmp_name'], $imagePath);
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($_FILES['new_image']['tmp_name'], $imageFilePath)) {
+           
+        } else {
+            echo "Error moving uploaded file.";
+        }
     } else {
         $imagePath = "";
-    }
+        $imageFilePath = "";
+    } 
+    
 
     // Add the new category to the database
-    if (addCategory($newCategoryName, $newDescription, $imagePath)) {
+    if (addCategory($newCategoryName, $newDescription, $imageFilePath)) {
         echo "<script type='text/javascript'>alert('New category added successfully!');</script>";
     } else {
         echo "Error adding new category: " . $conn->error;
     }
 }
 
-// Check if the form is submitted for deleting
+
 if (isset($_GET['delete_category'])) {
     $categoryName = $_GET['delete_category'];
     if (deleteCategory($categoryName)) {
@@ -134,7 +132,7 @@ $categories = fetchCategories();
         <div class="submenu">
           <div class="userinfo">
             <?php
-            session_start(); // Start the session
+           
             
             // Check if an admin is logged in
             if (isset($_SESSION["admin_username"])) {
